@@ -166,7 +166,7 @@ local H =
     {
         Name = "ToggleBtn",
         Size = UDim2.new(0.48, 0, 0.3, 0),
-        Text = "TOGGLE",
+        Text = "ON/OFF",
         Font = "SourceSans",
         Position = UDim2.new(0, 0, 0.25, 0),
         TextSize = 23,
@@ -204,7 +204,7 @@ local K =
     {
         Name = "jewelryLbl",
         Size = UDim2.new(0.2, 0, 1, 0),
-        Text = "Jewel",
+        Text = "Joye",
         TextSize = 18,
         Font = "SourceSansLight",
         BackgroundTransparency = 1,
@@ -220,7 +220,7 @@ local L =
     {
         Name = "trainLbl",
         Size = UDim2.new(0.2, 0, 1, 0),
-        Text = "Train",
+        Text = "Tren",
         TextSize = 18,
         Font = "SourceSansLight",
         BackgroundTransparency = 1,
@@ -236,7 +236,7 @@ local M =
     {
         Name = "bankLbl",
         Size = UDim2.new(0.2, 0, 1, 0),
-        Text = "Bank",
+        Text = "Banco",
         TextSize = 18,
         Font = "SourceSansLight",
         BackgroundTransparency = 1,
@@ -284,7 +284,7 @@ local P =
     {
         Name = "planeLbl",
         Size = UDim2.new(0.2, 0, 1, 0),
-        Text = "Plane",
+        Text = "Avión",
         TextSize = 18,
         Font = "SourceSansLight",
         BackgroundTransparency = 1,
@@ -493,7 +493,7 @@ local gb =
         Name = "Title",
         TextWrapped = true,
         Size = UDim2.new(0.5, 0, 0, 20),
-        Text = "Auto-Rob by kim111#2795",
+        Text = "Auto-Rob by kim111",
         TextSize = 18,
         Font = "Highway",
         BackgroundTransparency = 1,
@@ -1361,7 +1361,7 @@ end
 local function fc()
     local mc = Zb("Steam engine")
     if mc then
-        jb("Robbery started!")
+        jb("¡Comenzó el robo!")
         local nc = workspace.Trains:GetDescendants()
         for pc = 1, #nc do
             local qc = nc[pc]
@@ -1433,7 +1433,7 @@ local function gc()
             local pc = CFrame.new(oc, Vector3.new(nc.Position.X, oc.Y, nc.Position.Z))
             y()
             Wb(pc)
-            jb("Robbery started!")
+            jb("¡Comenzó el robo!")
             Nb(0.2)
             if o then
                 mc = false
@@ -1468,7 +1468,7 @@ local function gc()
                         j:SendKeyEvent(false, "E", false, game)
                     end
                     Nb(1)
-                    jb(string.format("Robbery started! (%d/6)", qc))
+                    jb(string.format("¡Comenzó el robo! (%d/6)", qc))
                     if not nc.Parent then
                         break
                     end
@@ -1508,7 +1508,7 @@ local function hc()
             )
             mc = not o
             if workspace:FindFirstChild("Plane") then
-                jb("Robbery started!")
+                jb("¡Comenzó el robo!")
                 local oc = workspace.Plane.Crates:GetChildren()
                 for pc = 1, #oc do
                     local qc = oc[pc]:FindFirstChild("1")
@@ -1584,7 +1584,7 @@ end
 local function ic()
     local mc = Zb("Power plant")
     if mc then
-        jb("TPing to power plant...")
+        jb("TP para la central nuclear...")
         Xb(CFrame.new(693.4, 38, 2358.8) * CFrame.Angles(0, math.pi / -2, 0))
         Nb(
             2,
@@ -1595,7 +1595,7 @@ local function ic()
         if o then
             mc = false
         elseif tb.IsOpen then
-            jb("Solving first puzzle...")
+            jb("Resolviendo el primer rompecabezas...")
             for pc, qc in ipairs(tb.Grid) do
                 for rc, sc in ipairs(qc) do
                     qc[rc] = sc + 1
@@ -1629,7 +1629,7 @@ local function ic()
                     m.CFrame = m.CFrame + Vector3.new(0, 25, 0)
                     Wb(CFrame.new(719, 62.4, 2221))
                     for pc = 1, 3 do
-                        jb("Robbery started!")
+                        jb("¡Comenzó el robo!")
                         Wb(CFrame.new(789.9, 5.2, 2158.4))
                         Nb(1)
                         m.CFrame = CFrame.new(789, 5.6, 2144)
@@ -1640,7 +1640,7 @@ local function ic()
                             end
                         )
                         if tb.IsOpen then
-                            jb("Solving second puzzle...")
+                            jb("Resolviendo el segundo rompecabezas...")
                             for sc, tc in ipairs(tb.Grid) do
                                 for uc, vc in ipairs(tc) do
                                     tc[uc] = vc + 1
@@ -1673,12 +1673,12 @@ local function ic()
                                 if tb.IsOpen then
                                     tb:Hide()
                                 else
-                                    jb("TPing to collector...")
+                                    jb("TP para coleccionista...")
                                     local sc = tick()
                                     Xb(CFrame.new(1645, 18.9, -1761))
                                     Nb(24 + math.random() * 1 - (tick() - sc))
                                     Pb()
-                                    jb("Selling...")
+                                    jb("Vendidendo...")
                                     Wb(CFrame.new(1647, 50.7, -1813))
                                     Nb(
                                         9,
@@ -1703,7 +1703,7 @@ local function ic()
         if mc then
             Jb = false
             Q.TextColor3 = Color3.new(1, 1, 1)
-            jb("Power plant success!")
+            jb("Central nuclear ejecutada con éxito!")
         end
     end
     ib(false)
@@ -1715,7 +1715,7 @@ local function ic()
 end
 local function jc()
     Ab = tick()
-    jb("Speeding up the plane...")
+    jb("Acelerando el avión...")
     local mc = m.CFrame
     if tostring(i.Team) ~= "Police" then
         d(qb, 1, 1)
@@ -1729,7 +1729,7 @@ local function jc()
         )
     end
     for pc = 1, #ob do
-        if ob[pc].Name == "Call Cargo Plane" then
+        if ob[pc].Name == "Llamar avión de carga" then
             ob[pc]:Callback(true)
             break
         end
@@ -1757,7 +1757,7 @@ if b then
     game:GetService("StarterGui"):SetCore(
         "SendNotification",
         {
-            Title = "Auto-Rob by kim111#2795",
+            Title = "Auto-Rob by kim111",
             Text = t and "OPTIONS CHANGED!" or "tp method is currently patched",
             Duration = 15,
             Button1 = "nigga"
@@ -1767,7 +1767,7 @@ else
     game:GetService("StarterGui"):SetCore(
         "SendNotification",
         {
-            Title = "Auto-Rob by kim111#2795",
+            Title = "Auto-Rob by kim111",
             Text = t and "OPTIONS CHANGED!" or "Consider buying a paid exploit for more features, like robbing power",
             Duration = 15,
             Button1 = "ty daddy"
@@ -1814,7 +1814,7 @@ while wait(0.5) and B.Parent do
             Ob("Caret")
             gc()
         else
-            jb("Wait for stores to open" .. string.rep(".", kc % 3 + 1))
+            jb("Espere a que abran las tiendas" .. string.rep(".", kc % 3 + 1))
             kc = kc + 1
         end
     else
