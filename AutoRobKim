@@ -1,0 +1,1823 @@
+local b, c, d, e, f, g =
+    getupvalues or debug.getupvalues,
+    getupvalue or debug.getupvalue,
+    setupvalue or debug.setupvalue,
+    islclosure or is_l_closure,
+    getconsts or debug.getconstants,
+    (syn and syn.request or http_request) or request
+local h = game:GetService("Players")
+local i = h.LocalPlayer or h:GetPropertyChangedSignal("LocalPlayer"):Wait() or h.LocalPlayer
+local j = game:GetService("VirtualInputManager")
+local k, l
+local m = {}
+local n = Vector3.new()
+local o = false
+local p, q, r = Color3.fromRGB(0, 222, 0), Color3.fromRGB(222, 0, 0), Color3.fromRGB(222, 222, 222)
+local s = {
+    enabled = true,
+    jewlAllowCrims = false,
+    preferLongTP = false,
+    bankRadius2 = 19,
+    preferUnsafeEsc = false,
+    warnSeconds = 1.5,
+    respawnForPlane = false
+}
+local t = false
+if readfile then
+    pcall(
+        function()
+            local mc = game:GetService("HttpService"):JSONDecode(readfile("JBAR.txt"))
+            local nc = false
+            for oc, pc in pairs(mc) do
+                if s[oc] == nil then
+                    nc = true
+                    mc[oc] = nil
+                end
+            end
+            for oc, pc in pairs(s) do
+                if mc[oc] == nil then
+                    nc = true
+                    mc[oc] = pc
+                end
+            end
+            if nc then
+                t = true
+                writefile("JBAR.txt", game:GetService("HttpService"):JSONEncode(mc))
+            end
+            s = mc
+        end
+    )
+end
+local u = game:GetService("RunService").Stepped
+local v = {}
+local w
+local x = function()
+    for mc = 1, #v do
+        v[mc].CanCollide = false
+    end
+end
+local function y()
+    if not w then
+        w = u:Connect(x)
+    end
+end
+local function z()
+    if w then
+        w:Disconnect()
+        w = nil
+    end
+end
+local function A(mc)
+    if mc then
+        m = mc:WaitForChild("HumanoidRootPart")
+        l = mc:WaitForChild("Humanoid")
+        wait(0.2)
+        v = {}
+        for nc, oc in ipairs(mc:GetChildren()) do
+            if oc:IsA("BasePart") then
+                v[#v + 1] = oc
+            end
+        end
+    end
+end
+A(i.Character)
+i.CharacterAdded:Connect(A)
+a = function(mc, nc, oc)
+    local pc = Instance.new(mc)
+    for qc, rc in next, oc do
+        pc[qc] = rc
+    end
+    pc.Parent = nc
+    return pc
+end
+local B = a("ScreenGui", nil, {Name = "AutoRob", ResetOnSpawn = false, ZIndexBehavior = "Sibling"})
+local C =
+    a(
+    "Frame",
+    B,
+    {
+        Name = "Main",
+        ClipsDescendants = true,
+        Draggable = true,
+        Active = true,
+        Size = UDim2.new(0, 333, 0, 140),
+        Position = UDim2.new(0.1, 0, 0.3, 0),
+        BackgroundColor3 = Color3.new(0, 0.118, 0.239)
+    }
+)
+local D =
+    a(
+    "Frame",
+    C,
+    {
+        Name = "homeFrame",
+        BackgroundTransparency = 1,
+        Size = UDim2.new(1, -30, 1, -55),
+        Position = UDim2.new(0, 15, 0, 40)
+    }
+)
+local E =
+    a(
+    "TextButton",
+    D,
+    {
+        Name = "AbortBtn",
+        Size = UDim2.new(0.48, 0, 0.3, 0),
+        Text = "ABORTAR",
+        Font = "SourceSans",
+        Position = UDim2.new(0.52, 0, 0.25, 0),
+        TextSize = 23,
+        AutoButtonColor = false,
+        BackgroundColor3 = Color3.new(0.502, 0.498, 0.506)
+    }
+)
+local F =
+    a(
+    "Frame",
+    E,
+    {
+        Name = "Shade",
+        BackgroundTransparency = 0.9,
+        Size = UDim2.new(1, 0, 0.5, 0),
+        Position = UDim2.new(0, 0, 0.5, 0),
+        BackgroundColor3 = Color3.new(),
+        Visible = false
+    }
+)
+local G =
+    a(
+    "TextLabel",
+    D,
+    {
+        Name = "Status",
+        Size = UDim2.new(1, 0, 0.27, 0),
+        Text = "Estado: Cargando...",
+        TextSize = 15,
+        TextXAlignment = "Left",
+        Font = "Code",
+        Position = UDim2.new(0, 0, 0.73, 0),
+        BackgroundColor3 = Color3.new(0.765, 0.765, 0.765)
+    }
+)
+local H =
+    a(
+    "TextButton",
+    D,
+    {
+        Name = "ToggleBtn",
+        Size = UDim2.new(0.48, 0, 0.3, 0),
+        Text = "TOGGLE",
+        Font = "SourceSans",
+        Position = UDim2.new(0, 0, 0.25, 0),
+        TextSize = 23,
+        BackgroundColor3 = s.enabled and p or q
+    }
+)
+local I =
+    a(
+    "Frame",
+    H,
+    {
+        Name = "Shade",
+        BackgroundTransparency = 0.9,
+        Size = UDim2.new(1, 0, 0.5, 0),
+        Position = UDim2.new(0, 0, 0.5, 0),
+        BackgroundColor3 = Color3.new()
+    }
+)
+local J =
+    a(
+    "Frame",
+    D,
+    {
+        Name = "availabels",
+        BackgroundTransparency = 1,
+        Size = UDim2.new(1, 0, 0.23, 0),
+        Position = UDim2.new(0, 0, -0.12, 0),
+        BackgroundColor3 = Color3.new(1, 1, 1)
+    }
+)
+local K =
+    a(
+    "TextLabel",
+    J,
+    {
+        Name = "jewelryLbl",
+        Size = UDim2.new(0.2, 0, 1, 0),
+        Text = "Jewel",
+        TextSize = 18,
+        Font = "SourceSansLight",
+        BackgroundTransparency = 1,
+        Position = UDim2.new(0.455, 0, 0, 0),
+        TextColor3 = Color3.new(1, 1, 1),
+        BackgroundColor3 = Color3.new(1, 1, 1)
+    }
+)
+local L =
+    a(
+    "TextLabel",
+    J,
+    {
+        Name = "trainLbl",
+        Size = UDim2.new(0.2, 0, 1, 0),
+        Text = "Train",
+        TextSize = 18,
+        Font = "SourceSansLight",
+        BackgroundTransparency = 1,
+        Position = UDim2.new(0.595, 0, 0, 0),
+        TextColor3 = Color3.new(1, 1, 1),
+        BackgroundColor3 = Color3.new(1, 1, 1)
+    }
+)
+local M =
+    a(
+    "TextLabel",
+    J,
+    {
+        Name = "bankLbl",
+        Size = UDim2.new(0.2, 0, 1, 0),
+        Text = "Bank",
+        TextSize = 18,
+        Font = "SourceSansLight",
+        BackgroundTransparency = 1,
+        Position = UDim2.new(0.725, 0, 0, 0),
+        TextColor3 = Color3.new(1, 1, 1),
+        BackgroundColor3 = Color3.new(1, 1, 1)
+    }
+)
+local N =
+    a(
+    "TextLabel",
+    J,
+    {
+        Name = "airdropLbl",
+        Size = UDim2.new(0.2, 0, 1, 0),
+        Text = "Drop",
+        TextSize = 18,
+        Font = "SourceSansLight",
+        BackgroundTransparency = 1,
+        Position = UDim2.new(0.855, 0, 0, 0),
+        TextColor3 = Color3.new(1, 1, 1),
+        BackgroundColor3 = Color3.new(1, 1, 1)
+    }
+)
+local O =
+    a(
+    "TextLabel",
+    J,
+    {
+        Name = "museumLbl",
+        Size = UDim2.new(0.2, 0, 1, 0),
+        Text = "Museum",
+        TextSize = 18,
+        Font = "SourceSansLight",
+        BackgroundTransparency = 1,
+        TextColor3 = Color3.new(1, 1, 1),
+        BackgroundColor3 = Color3.new(1, 1, 1),
+        Position = UDim2.new(0.285, 0, 0, 0)
+    }
+)
+local P =
+    a(
+    "TextLabel",
+    J,
+    {
+        Name = "planeLbl",
+        Size = UDim2.new(0.2, 0, 1, 0),
+        Text = "Plane",
+        TextSize = 18,
+        Font = "SourceSansLight",
+        BackgroundTransparency = 1,
+        TextColor3 = Color3.new(1, 1, 1),
+        BackgroundColor3 = Color3.new(1, 1, 1),
+        Position = UDim2.new(0.112, 0, 0, 0)
+    }
+)
+local Q =
+    a(
+    "TextLabel",
+    J,
+    {
+        Name = "powerLbl",
+        Size = UDim2.new(0.2, 0, 1, 0),
+        Text = "Power",
+        TextSize = 18,
+        Font = "SourceSansLight",
+        BackgroundTransparency = 1,
+        TextColor3 = Color3.new(1, 1, 1),
+        BackgroundColor3 = Color3.new(1, 1, 1),
+        Position = UDim2.new(-0.035, 0, 0, 0)
+    }
+)
+local R =
+    a(
+    "TextButton",
+    C,
+    {
+        Name = "CloseBtn",
+        TextWrapped = true,
+        TextStrokeTransparency = 0.7,
+        Size = UDim2.new(0, 25, 0, 25),
+        TextColor3 = r,
+        Text = "X",
+        BackgroundTransparency = 1,
+        Font = "GothamBold",
+        Position = UDim2.new(1, -22, 0, 0),
+        TextScaled = true
+    }
+)
+local S =
+    a(
+    "ImageButton",
+    C,
+    {
+        Name = "CogBtn",
+        Image = "rbxassetid://135740223",
+        Size = UDim2.new(0, 25, 0, 25),
+        Position = UDim2.new(0, 0, 0, 2),
+        BackgroundTransparency = 1
+    }
+)
+local T =
+    a(
+    "Frame",
+    C,
+    {
+        Name = "setsframe",
+        BackgroundTransparency = 0.02,
+        Size = UDim2.new(1, -10, 0.8, -10),
+        Position = UDim2.new(-1, 5, 0.2, 5),
+        BorderSizePixel = 0,
+        BackgroundColor3 = Color3.new(1, 1, 1)
+    }
+)
+local U = a("Frame", T, {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0.25, 0)})
+local V =
+    a(
+    "TextBox",
+    U,
+    {
+        Name = "BankRadiusBox",
+        TextWrapped = true,
+        Size = UDim2.new(0, 40, 0, 15),
+        Text = s.bankRadius2,
+        Font = "GothamSemibold",
+        Position = UDim2.new(0.78, 0, 0.2, 0),
+        TextScaled = true,
+        BackgroundColor3 = Color3.new(1, 1, 1)
+    }
+)
+local W =
+    a(
+    "TextLabel",
+    U,
+    {
+        TextWrapped = true,
+        Size = UDim2.new(0.8, 0, 1, 0),
+        Text = "Bank Cops Danger Range",
+        TextSize = 15,
+        Font = "Code",
+        BackgroundTransparency = 1
+    }
+)
+local X =
+    a(
+    "Frame",
+    T,
+    {
+        BackgroundTransparency = 0.93,
+        Size = UDim2.new(1, 0, 0.25, 0),
+        Position = UDim2.new(0, 0, 0.25, 0),
+        BackgroundColor3 = Color3.new()
+    }
+)
+local Y =
+    a(
+    "TextButton",
+    X,
+    {
+        Name = "JewlSetBtn",
+        Size = UDim2.new(0, 25, 0, 15),
+        Text = s.respawnForPlane and "X" or "",
+        Font = "SourceSansSemibold",
+        Position = UDim2.new(0.8, 0, 0.2, 0),
+        TextSize = 20,
+        BackgroundColor3 = Color3.new(1, 1, 1)
+    }
+)
+local Z =
+    a(
+    "TextLabel",
+    X,
+    {
+        TextWrapped = true,
+        Size = UDim2.new(0.8, 0, 1, 0),
+        Text = "Respawn To Speed Up Plane",
+        TextSize = 15,
+        Font = "Code",
+        BackgroundTransparency = 1
+    }
+)
+local ab =
+    a("Frame", T, {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0.25, 0), Position = UDim2.new(0, 0, 0.5, 0)})
+local bb =
+    a(
+    "TextButton",
+    ab,
+    {
+        Name = "WarnSetBtn",
+        Size = UDim2.new(0, 25, 0, 15),
+        Text = s.warnSeconds > 1.51 and "X" or "",
+        Font = "SourceSansSemibold",
+        Position = UDim2.new(0.8, 0, 0.2, 0),
+        TextSize = 20,
+        BackgroundColor3 = Color3.new(1, 1, 1)
+    }
+)
+local cb =
+    a(
+    "TextLabel",
+    ab,
+    {
+        TextWrapped = true,
+        Size = UDim2.new(0.8, 0, 1, 0),
+        Text = "Prefer Longer Warnings",
+        TextSize = 15,
+        Font = "Code",
+        BackgroundTransparency = 1
+    }
+)
+local db =
+    a(
+    "Frame",
+    T,
+    {
+        BackgroundTransparency = 0.93,
+        Size = UDim2.new(1, 0, 0.25, 0),
+        Position = UDim2.new(0, 0, 0.75, 0),
+        BackgroundColor3 = Color3.new()
+    }
+)
+local eb =
+    a(
+    "TextButton",
+    db,
+    {
+        Name = "EscSetBtn",
+        Size = UDim2.new(0, 25, 0, 15),
+        Text = s.preferUnsafeEsc and "X" or "",
+        Font = "SourceSansSemibold",
+        Position = UDim2.new(0.8, 0, 0.2, 0),
+        TextSize = 20,
+        BackgroundColor3 = Color3.new(1, 1, 1)
+    }
+)
+local fb =
+    a(
+    "TextLabel",
+    db,
+    {
+        TextWrapped = true,
+        Size = UDim2.new(0.8, 0, 1, 0),
+        Text = "Remember Your Position",
+        TextSize = 15,
+        Font = "Code",
+        BackgroundTransparency = 1
+    }
+)
+local gb =
+    a(
+    "TextLabel",
+    C,
+    {
+        Name = "Title",
+        TextWrapped = true,
+        Size = UDim2.new(0.5, 0, 0, 20),
+        Text = "Auto-Rob by SirelKilla",
+        TextSize = 18,
+        Font = "Highway",
+        BackgroundTransparency = 1,
+        Position = UDim2.new(0.24, 0, 0, 3),
+        TextColor3 = r,
+        BackgroundColor3 = Color3.new(1, 1, 1)
+    }
+)
+local hb =
+    a(
+    "TextButton",
+    C,
+    {
+        Name = "SaveSetsBtn",
+        Size = UDim2.new(0, 60, 0, 25),
+        Text = "Save",
+        Font = "SourceSans",
+        Style = "RobloxRoundDefaultButton",
+        Position = UDim2.new(0, 30, 0, -25),
+        TextSize = 20
+    }
+)
+if syn then
+    syn.protect_gui(B)
+end
+B.Parent = game.CoreGui
+R.MouseButton1Click:Connect(
+    function()
+        B:Destroy()
+        o = true
+        if k then
+            k:Disconnect()
+        end
+    end
+)
+R.MouseEnter:Connect(
+    function()
+        R.TextColor3 = q
+    end
+)
+R.MouseLeave:Connect(
+    function()
+        R.TextColor3 = r
+    end
+)
+local function ib(mc)
+    E.AutoButtonColor = mc
+    E.BackgroundColor3 = mc and Color3.new(0.353, 0.557, 0.914) or Color3.new(0.502, 0.498, 0.506)
+    F.Visible = mc
+    o = false
+end
+E.MouseButton1Click:Connect(
+    function()
+        if E.AutoButtonColor then
+            if k then
+                k:Disconnect()
+            end
+            ib(false)
+            o = true
+            E.Text = "Aborted."
+            wait(2.8)
+            E.Text = "ABORTAR"
+        end
+    end
+)
+local function jb(mc)
+    G.Text = "Estado: " .. mc
+end
+local kb = game:GetService("TweenService"):Create(S, TweenInfo.new(0.25), {Rotation = 135})
+local lb = game:GetService("TweenService"):Create(S, TweenInfo.new(0.25), {Rotation = 0})
+local mb = false
+S.MouseButton1Click:Connect(
+    function()
+        mb = not mb
+        if mb then
+            T:TweenPosition(UDim2.new(0, 5, 0.2, 5), nil, "Quart", 0.3, true)
+            D:TweenPosition(UDim2.new(1, 15, 0, 40), nil, "Quart", 0.3, true)
+            if writefile then
+                hb:TweenPosition(UDim2.new(0, 30, 0, 2), nil, "Quart", 0.3, true)
+            end
+            kb:Play()
+        else
+            T:TweenPosition(UDim2.new(-1, 5, 0.2, 5), nil, "Quart", 0.3, true)
+            D:TweenPosition(UDim2.new(0, 15, 0, 40), nil, "Quart", 0.3, true)
+            hb:TweenPosition(UDim2.new(0, 30, 0, -25), nil, "Quart", 0.3, true)
+            lb:Play()
+        end
+    end
+)
+local nb = V.Text
+V:GetPropertyChangedSignal("Text"):Connect(
+    function()
+        V.Text = V.Text:sub(1, 4)
+        local mc = tonumber(V.Text)
+        if mc then
+            if mc > 99 then
+                V.Text = "99"
+            end
+        elseif V.Text ~= "" then
+            V.Text = nb
+        end
+        nb = V.Text
+    end
+)
+V.FocusLost:Connect(
+    function()
+        if tonumber(V.Text) then
+            s.bankRadius2 = tonumber(V.Text)
+        end
+        V.Text = tostring(s.bankRadius2)
+    end
+)
+Y.MouseButton1Click:Connect(
+    function()
+        s.respawnForPlane = not s.respawnForPlane
+        Y.Text = s.respawnForPlane and "X" or ""
+    end
+)
+bb.MouseButton1Click:Connect(
+    function()
+        s.warnSeconds = s.warnSeconds > 1.51 and 1.5 or 3
+        bb.Text = s.warnSeconds > 1.51 and "X" or ""
+    end
+)
+eb.MouseButton1Click:Connect(
+    function()
+        s.preferUnsafeEsc = not s.preferUnsafeEsc
+        eb.Text = s.preferUnsafeEsc and "X" or ""
+    end
+)
+hb.MouseButton1Click:Connect(
+    function()
+        if writefile and hb.Style.Name == "RobloxRoundDefaultButton" then
+            hb.Style = "RobloxRoundButton"
+            writefile("JBAR.txt", game:GetService("HttpService"):JSONEncode(s))
+            hb.Text = "Saved."
+            wait(1)
+            hb.Text = "Save"
+            hb.Style = "RobloxRoundDefaultButton"
+        end
+    end
+)
+H.MouseButton1Click:Connect(
+    function()
+        s.enabled = not s.enabled
+        H.BackgroundColor3 = s.enabled and p or q
+    end
+)
+i:WaitForChild("PlayerScripts"):WaitForChild("LocalScript")
+workspace:WaitForChild("Trains")
+wait(1)
+local ob, pb, qb, rb, sb, tb
+if b then
+    local mc = (getreg or debug.getregistry)()
+    for nc = 1, #mc do
+        local oc = mc[nc]
+        if
+            type(oc) == "function" and (is_protected_closure == nil or is_protected_closure(oc) == false) and
+                (e == nil or e(oc))
+         then
+            for pc, qc in next, b(oc) do
+                if pb == nil and type(qc) == "table" and #qc > 5 then
+                    for rc = 1, #qc do
+                        local sc = rawget(qc, rc)
+                        if type(sc) == "table" then
+                            if rawget(sc, "Name") == "Punch" then
+                                pb = sc
+                            end
+                        else
+                            break
+                        end
+                    end
+                elseif
+                    sb == nil and type(qc) == "function" and
+                        (is_protected_closure == nil or is_protected_closure(qc) == false) and
+                        (e == nil or e(qc)) and
+                        b(qc)[#b(qc)] == qc
+                 then
+                    sb = qc
+                end
+            end
+        elseif type(oc) == "table" and #oc == 0 then
+            if rawget(oc, "CircleAction") then
+                ob = oc.CircleAction.Specs
+            elseif rawget(oc, "IsFlying") then
+                oc.IsFlying = function()
+                    return tostring(getfenv(2).script) == "Falling"
+                end
+            elseif rb == nil and rawget(oc, "Show") and rawget(oc, "ColorCorrection") then
+                if oc.Maid then
+                    rb = function()
+                    end
+                else
+                    local pc, qc
+                    for rc, sc in next, b(oc.Show) do
+                        if type(sc) == "table" and sc.Unequip then
+                            pc, qc = rc, sc
+                            break
+                        end
+                    end
+                    d(oc.Show, pc, nil)
+                    pcall(oc.Show)
+                    d(oc.Show, pc, qc)
+                    rb = oc.Hide
+                end
+            elseif tb == nil and type(rawget(oc, "Init")) == "function" then
+                for pc, qc in next, b(rawget(oc, "Init")) do
+                    if type(qc) == "table" and rawget(qc, "SetGrid") then
+                        tb = qc
+                        break
+                    end
+                end
+            end
+        end
+    end
+    if rb then
+        for nc = 1, #mc do
+            local oc = mc[nc]
+            if
+                type(oc) == "function" and (is_protected_closure == nil or is_protected_closure(oc) == false) and
+                    (e == nil or e(oc)) and
+                    f(oc)[1] == "Police" and
+                    f(oc)[3] == "assert"
+             then
+                qb = oc
+                rb()
+                break
+            end
+        end
+    end
+    if not (ob and pb and qb and rb and sb and tb) then
+        jb("LOAD ERROR")
+        wait(2)
+    end
+end
+for mc, nc in ipairs(workspace.Buildings:GetChildren()) do
+    if (nc.Position - Vector3.new(330.8, 62.4, 720.5)).Magnitude < 1 then
+        nc.CanCollide = false
+    end
+end
+if i.PlayerScripts:FindFirstChild("GameAnalyticsClient") then
+    i.PlayerScripts.GameAnalyticsClient.Disabled = true
+end
+local ub = {
+    {CFrame.new(1053.6, 101.7, 1245.6), workspace.Museum.MummyCase.Dummy.Head},
+    {CFrame.new(1037.1, 116.6, 1254.8), workspace.Museum.Reference.Items.Gold},
+    {CFrame.new(1046.8, 116.6, 1262.7), workspace.Museum.Reference.Items.SpinnerRim},
+    {CFrame.new(1029.4, 116.6, 1247.7), workspace.Museum.Reference.Items.Cone.Cone},
+    {CFrame.new(1038.8, 101.7, 1238.7), workspace.Museum.EgyptionCase.Mask},
+    {CFrame.new(1105.3, 101.7, 1151), workspace.Museum.JewelCase.Jewel}
+}
+local vb = workspace.Trains:FindFirstChild("SteamEngine") ~= nil
+local wb = false
+local xb
+local yb = xb or {}
+workspace.Trains.ChildAdded:Connect(
+    function(mc)
+        wait(math.random())
+        if mc.Name == "SteamEngine" then
+            vb = true
+        elseif mc.Name == "BoxCar" and xb == nil and yb.Parent == nil and false then
+            yb = mc
+            wait(24 + math.random() * 53)
+            if mc.Parent and xb == nil then
+                xb = mc
+            end
+        end
+        L.TextColor3 = (xb or vb) and p or Color3.new(1, 1, 1)
+    end
+)
+workspace.Trains.ChildRemoved:Connect(
+    function(mc)
+        if xb == mc then
+            xb = nil
+        elseif mc.Name == "SteamEngine" then
+            vb = false
+        end
+        L.TextColor3 = (xb or vb) and p or Color3.new(1, 1, 1)
+    end
+)
+L.TextColor3 = (xb or vb) and p or Color3.new(1, 1, 1)
+local zb = {}
+local Ab = 0
+local function Bb()
+    local mc = workspace.Plane.Crates:GetChildren()
+    for nc = 1, #mc do
+        local oc = mc[nc]:FindFirstChild("1")
+        if oc and oc.Transparency < .99 and oc.Position.Y > 50 then
+            return oc
+        end
+    end
+end
+local function Cb(mc)
+    if mc.ClassName == "Model" then
+        if mc.Name == "Drop" then
+            local nc = mc:WaitForChild("Briefcase", 2)
+            while nc and nc.Parent and mc:FindFirstChild("Parachute") do
+                mc.ChildRemoved:Wait()
+                wait()
+            end
+            if nc and nc.Parent then
+                zb[#zb + 1] = nc
+                N.TextColor3 = p
+            end
+        elseif mc.Name == "Plane" and mc:WaitForChild("Crates", 2) then
+            Ab = tick() + 120
+            while mc.Parent and Bb() == nil do
+                wait(0.3)
+            end
+            if mc.Parent then
+                wb = true
+                P.TextColor3 = p
+            end
+        end
+    end
+end
+for mc, nc in ipairs(workspace:GetChildren()) do
+    if nc.ClassName == "Model" then
+        coroutine.wrap(Cb)(nc)
+    end
+end
+workspace.ChildAdded:Connect(Cb)
+workspace.ChildRemoved:Connect(
+    function(mc)
+        if mc.ClassName == "Model" then
+            if mc.Name == "Drop" then
+                wait()
+                for nc = #zb, 1, -1 do
+                    if not game:IsAncestorOf(zb[nc]) then
+                        table.remove(zb, nc)
+                    end
+                end
+                N.TextColor3 = #zb > 0 and p or Color3.new(1, 1, 1)
+            elseif mc.Name == "Plane" then
+                wb = false
+                P.TextColor3 = Color3.new(1, 1, 1)
+                Ab = tick()
+            end
+        end
+    end
+)
+local Db = workspace.Banks:GetChildren()[1].Extra.Sign.Decal
+local Eb = workspace.Jewelrys:GetChildren()[1].Extra.Sign.Decal
+local Fb = workspace.Museum.Roof.Hole.Part
+local Gb = Db.Transparency > 0.01
+local Hb = Eb.Transparency > 0.01
+local Ib = not Fb.CanCollide
+local Jb = workspace.PowerPlant.Piston.Piston:FindFirstChildOfClass("TouchTransmitter") ~= nil
+local Kb = #workspace.Ringers.Bank:GetChildren() == 0
+local Lb = #workspace.Ringers.Jewelry:GetChildren() == 0
+local Mb = not Jb
+Db:GetPropertyChangedSignal("Transparency"):Connect(
+    function()
+        wait()
+        Gb = Db.Transparency > 0.01
+        M.TextColor3 = Gb and p or Color3.new(1, 1, 1)
+        if not Gb then
+            Kb = true
+        end
+    end
+)
+Eb:GetPropertyChangedSignal("Transparency"):Connect(
+    function()
+        wait()
+        Hb = Eb.Transparency > 0.01
+        K.TextColor3 = Hb and p or Color3.new(1, 1, 1)
+        if not Hb then
+            Lb = true
+        end
+    end
+)
+Fb:GetPropertyChangedSignal("CanCollide"):Connect(
+    function()
+        wait()
+        Ib = not Fb.CanCollide
+        O.TextColor3 = Ib and p or Color3.new(1, 1, 1)
+    end
+)
+workspace.PowerPlant.Piston.Piston.ChildAdded:Connect(
+    function(mc)
+        if mc.ClassName == "TouchTransmitter" then
+            Mb = false
+            Jb = true
+            Q.TextColor3 = p
+        end
+    end
+)
+workspace.PowerPlant.Piston.Piston.ChildRemoved:Connect(
+    function(mc)
+        if mc.ClassName == "TouchTransmitter" then
+            Mb = false
+            Jb = false
+            Q.TextColor3 = Color3.new(1, 1, 1)
+            wait(298)
+            Jb = true
+            Q.TextColor3 = p
+        end
+    end
+)
+M.TextColor3 = Gb and p or Color3.new(1, 1, 1)
+K.TextColor3 = Hb and p or Color3.new(1, 1, 1)
+O.TextColor3 = Ib and p or Color3.new(1, 1, 1)
+Q.TextColor3 = Jb and p or Color3.new(1, 1, 1)
+workspace.Ringers.Bank.ChildAdded:Connect(
+    function()
+        Kb = false
+    end
+)
+workspace.Ringers.Jewelry.ChildAdded:Connect(
+    function()
+        Lb = false
+    end
+)
+local function Nb(mc, nc)
+    local oc = tick()
+    local pc = 0.1
+    mc = (mc == nil or mc <= 0) and 0.001 or mc
+    pc = (pc > mc) and mc or pc
+    while tick() - oc < mc and o == false and (nc == nil or nc(tick() - oc)) do
+        wait(pc)
+    end
+    return tick() - oc
+end
+local function Ob(mc)
+    j:SendKeyEvent(true, mc, false, game)
+    wait()
+    j:SendKeyEvent(false, mc, false, game)
+end
+local function Pb(mc)
+    if l.Sit then
+        l.Jump = true
+        Ob("Space")
+        if mc or l:GetStateEnabled("Running") then
+            wait()
+        else
+            wait(3)
+        end
+    end
+end
+local function Qb(mc)
+    return tonumber((tostring(mc):gsub("%D", "")))
+end
+local function Rb()
+    local mc, nc = i.PlayerGui.RobberyMoneyGui.Container.Bottom.Progress.Amount.Text:match("(.-)/(.+)")
+    return i.PlayerGui.RobberyMoneyGui.Enabled and mc and nc and Qb(mc) >= Qb(nc)
+end
+local Sb
+local function Tb()
+    return (Sb.Door.Closed.CFrame.lookVector - Sb.Door.Hinge.CFrame.lookVector).Magnitude > 0.1
+end
+local function Ub(mc)
+    local nc = game:GetService("Teams").Police:GetPlayers()
+    for oc = 1, #nc do
+        local pc = nc[oc]
+        if pc.Character and pc.Character:FindFirstChild("HumanoidRootPart") and pc.Character:FindFirstChild("Humanoid") then
+            local qc = pc.Character.HumanoidRootPart.Position
+            if
+                (Sb.Door.Hinge.Position - qc).Magnitude < mc and pc.Character.Humanoid.Health > 0 and
+                    workspace:FindPartOnRayWithWhitelist(
+                        Ray.new(qc, Sb.TriggerDoor.Position - Sb.Door.Hinge.CFrame.lookVector * 3 - qc),
+                        {Sb.Decoration, Sb.Parent.Parent.TopFloor}
+                    ) == nil
+             then
+                return true
+            end
+        end
+    end
+    return false
+end
+local function Vb(mc)
+    if o then
+        return
+    end
+    local nc = workspace.CurrentCamera
+    nc.CameraType = "Scriptable"
+    nc.CFrame = CFrame.new(nc.CFrame.p, mc.Position)
+    wait()
+    nc.CameraType = "Custom"
+    wait()
+    j:SendKeyEvent(true, "E", false, game)
+end
+local function Wb(mc)
+    l:SetStateEnabled("FallingDown", false)
+    local nc = (mc - mc.p) + m.Position + Vector3.new(0, 4, 0)
+    local oc = mc.p - m.Position
+    local pc = workspace.Gravity
+    workspace.Gravity = 0
+    for qc = 0, oc.Magnitude, 2 do
+        if o then
+            break
+        end
+        m.CFrame = nc + oc.Unit * qc
+        m.Velocity, m.RotVelocity = n, n
+        wait()
+    end
+    if not o then
+        m.CFrame = mc
+    end
+    workspace.Gravity = pc
+end
+local function Xb(mc, nc)
+    if (mc.p - m.Position).magnitude > 300 and not nc then
+        local sc = workspace.Vehicles:GetChildren()
+        for tc = #sc, 1, -1 do
+            local uc = sc[tc]
+            if
+                not (uc:FindFirstChild("Seat") and uc:FindFirstChild("Camera") and uc.Seat:FindFirstChild("Player") and
+                    uc.Seat.Velocity.Magnitude < 1 and
+                    uc.Seat.Player.Value == false)
+             then
+                table.remove(sc, tc)
+            end
+        end
+        table.sort(
+            sc,
+            function(tc, uc)
+                return (tc.Seat.Position - mc.p).magnitude < (uc.Seat.Position - mc.p).magnitude
+            end
+        )
+        if sc[1] then
+            local tc = sc[1].Camera.CFrame
+            if (mc.p - tc.p).magnitude < (mc.p - m.Position).magnitude then
+                Nb(
+                    1.5,
+                    function()
+                        m.CFrame = tc
+                        return true
+                    end
+                )
+                Nb(0.5)
+            end
+        end
+    end
+    l:SetStateEnabled("FallingDown", false)
+    local oc = -190 + math.random() * -99
+    local pc = (mc - mc.p) + Vector3.new(m.Position.X, oc, m.Position.Z)
+    local qc = Vector3.new(mc.X, oc, mc.Z) - pc.p
+    local rc = workspace.Gravity
+    workspace.Gravity = 0
+    for sc = 0, qc.Magnitude, 2 do
+        if o then
+            break
+        end
+        m.CFrame = pc + qc.Unit * sc
+        m.Velocity, m.RotVelocity = n, n
+        wait()
+    end
+    if not o then
+        m.CFrame = mc
+    end
+    workspace.Gravity = rc
+    wait(.1)
+end
+local Yb = CFrame.new()
+local function Zb(mc)
+    ib(true)
+    jb(mc .. " ready.")
+    local nc = C.BackgroundColor3
+    local oc = 0
+    while oc < s.warnSeconds do
+        for pc = 0, 1, 1 / (30 * .25) do
+            C.BackgroundColor3 = nc:lerp(q, pc)
+            oc = oc + wait()
+        end
+        for pc = 0, 1, 1 / (30 * .25) do
+            C.BackgroundColor3 = q:lerp(nc, pc)
+            oc = oc + wait()
+        end
+    end
+    C.BackgroundColor3 = nc
+    if l == nil or l.Health < 1 then
+        wait(5)
+    end
+    if o or not s.enabled then
+        return false
+    end
+    Pb()
+    Yb = m.CFrame
+    if tostring(i.Team) == "Prisoner" then
+        jb("Breaking out...")
+        Nb(
+            25,
+            function()
+                return i.PlayerGui.MainGui.CellTime.Visible
+            end
+        )
+        Xb(CFrame.new(-954, 19.3, -1475))
+        Yb = CFrame.new(310 + math.random() * 31, 18.6, 717)
+        Nb(1)
+        if ob and not o then
+            for pc = 1, #ob do
+                local qc = ob[pc]
+                if
+                    qc.Name == "Enter Driver" and qc.Part and qc.Part.Parent and
+                        (qc.Part.Position - m.Position).magnitude < 20
+                 then
+                    qc:Callback(true)
+                    wait(1)
+                    qc.Part.Parent:SetPrimaryPartCFrame(CFrame.new(1654, 18.9, -1740))
+                    wait(1)
+                    Pb()
+                    break
+                end
+            end
+        end
+    end
+    return s.enabled and not o
+end
+local function ac()
+    o = false
+    jb("Escapando...")
+    if s.preferUnsafeEsc then
+        Xb(Yb)
+    else
+        Xb(CFrame.new(310 + math.random() * 31, 18.6, 717))
+    end
+end
+local function bc()
+    local mc = Zb("Jewelry")
+    if mc then
+        jb("TP para Joyería...")
+        Xb(CFrame.new(89.7, 17.88, 1302.53) * CFrame.Angles(0, math.pi / -2, 0))
+        Wb(CFrame.new(89.7, 9, 1302.53) * CFrame.Angles(0, math.pi / -2, 0))
+        mc = not o
+        jb("¡Comenzó el robo!")
+        local nc = 0
+        local oc = workspace.Jewelrys:GetChildren()[1].Boxes:GetChildren()
+        table.sort(
+            oc,
+            function(pc, qc)
+                return pc.Position.X + pc.Position.Y * -900 > qc.Position.X + qc.Position.Y * -900
+            end
+        )
+        for pc = 1, #oc do
+            if o or Hb == false or (nc > 3 and Rb()) then
+                break
+            end
+            local qc = oc[pc]
+            if qc.Transparency < 0.9 then
+                Wb(CFrame.new(qc.Position + qc.CFrame.lookVector * (qc.Position.X < 130 and 3 or -3), qc.Position))
+                Nb(0.1)
+                for rc = 1, 4 do
+                    if pb then
+                        pb:Callback(true)
+                    else
+                        Ob("F")
+                    end
+                    Nb(0.5)
+                    if qc.Transparency > 0.9 then
+                        break
+                    end
+                end
+                nc = nc + 1
+                Nb(0.5)
+            end
+        end
+        jb("Vendiendo...")
+        Xb(CFrame.new(-210.4, 35.3, 1587.9) * CFrame.Angles(0, math.pi, 0), true)
+        Nb(
+            3,
+            function()
+                return i.PlayerGui.RobberyMoneyGui.Enabled
+            end
+        )
+        ac()
+        if mc then
+            Hb = false
+            K.TextColor3 = Color3.new(1, 1, 1)
+            jb("Jewelry success!")
+        end
+    end
+    ib(false)
+    wait(2)
+    if mc then
+        jb("5 second cooldown.")
+        wait(5)
+    end
+end
+local function cc()
+    local mc = Zb("Bank")
+    if mc then
+        jb("TPing to bank...")
+        Xb(CFrame.new(23.6, 20, 853.5))
+        Nb(2)
+        mc = not o
+        jb("Opening vault...")
+        Sb = workspace.Banks:GetChildren()[1].Layout:GetChildren()[1]
+        local nc = Sb.TriggerDoor.CFrame
+        Sb.TriggerDoor.CFrame = m.CFrame
+        wait()
+        Sb.TriggerDoor.CFrame = nc
+        local oc = Sb.Door.Hinge.CFrame
+        local pc
+        if Sb.Money.Size.Magnitude > 25 and (Sb.Money.Position - oc.Position).Magnitude < 30 then
+            if Sb.Name == "TheMint" then
+                pc = oc + oc.lookVector * 3 + oc.rightVector * 13.5
+            else
+                pc = oc + oc.lookVector * 3 + oc.rightVector * -5.5 + Vector3.new(0, 3, 0)
+            end
+        else
+            if Sb:FindFirstChild("Lasers") then
+                for qc, rc in ipairs(Sb.Lasers:GetChildren()) do
+                    if rc.Name == "LaserTrack" then
+                        rc:Destroy()
+                    end
+                end
+            end
+            pc = Sb.Money.CFrame
+        end
+        Xb(pc)
+        Nb(
+            300,
+            function()
+                return Gb and Tb() == false
+            end
+        )
+        Nb(
+            3,
+            function()
+                return Gb and (not (Tb() and Ub(s.bankRadius2)))
+            end
+        )
+        jb("Robbery started!")
+        Nb(
+            80,
+            function()
+                return Rb() == false and Gb and (not (Tb() and Ub(s.bankRadius2)))
+            end
+        )
+        ac()
+        if mc then
+            Gb = false
+            M.TextColor3 = Color3.new(1, 1, 1)
+            jb("Bank success!")
+        end
+    end
+    ib(false)
+    wait(2)
+    if mc then
+        jb("5 second cooldown.")
+        wait(5)
+    end
+end
+local function dc()
+    local mc = Zb("Train")
+    if mc then
+        jb("TPing to train...")
+        local nc = xb.Model.Rob.Gold
+        Xb(nc.CFrame + nc.CFrame.lookVector * 4)
+        mc = not o
+        if xb.Parent and workspace.Trains:FindFirstChild("LocomotiveFront") then
+            local oc = workspace.Trains.LocomotiveFront.Model.Front
+            local pc, qc
+            for rc = 1, #ob do
+                local sc = ob[rc]
+                if
+                    pc == nil and sc.Name == "Open Door" and tostring(sc.Part) == "RoofDoorClosed" and
+                        xb:IsAncestorOf(sc.Part)
+                 then
+                    pc = sc
+                elseif qc == nil and sc.Name == "Breach Vault" and xb:IsAncestorOf(sc.Part) then
+                    qc = sc
+                end
+            end
+            if pc then
+                pc:Callback(true)
+            end
+            wait()
+            if qc then
+                qc:Callback(true)
+            end
+            jb("Robbery started!")
+            m.CFrame = nc.CFrame + nc.CFrame.lookVector * 4
+            Nb(
+                65,
+                function()
+                    return Rb() == false and oc.Position.X > -1584
+                end
+            )
+        end
+        ac()
+        if mc then
+            xb = nil
+            L.TextColor3 = Color3.new(1, 1, 1)
+            jb("Train success!")
+        end
+    end
+    ib(false)
+    wait(2)
+    if mc then
+        jb("5 second cooldown.")
+        wait(5)
+    end
+end
+local function ec()
+    local mc = Zb("Museum")
+    if mc then
+        jb("TPing to museum...")
+        Xb(CFrame.new(1064, 107, 1194))
+        Nb(1)
+        if o then
+            mc = false
+        else
+            jb("Robbery started!")
+            for oc = 1, #ub do
+                local pc = ub[oc][1]
+                local qc = ub[oc][2]
+                if qc.Transparency < .99 then
+                    if o or Ib == false or Rb() then
+                        break
+                    end
+                    Wb(pc)
+                    if oc == 1 then
+                        qc = qc.Parent.Parent.MummyNode
+                    end
+                    if ob then
+                        for rc = 1, #ob do
+                            if ob[rc].Part == qc then
+                                ob[rc]:Callback(true)
+                                break
+                            end
+                        end
+                        Nb(0.6)
+                    else
+                        Vb(qc)
+                        Nb(
+                            7,
+                            function()
+                                return qc.Transparency < .99
+                            end
+                        )
+                        j:SendKeyEvent(false, "E", false, game)
+                        Nb()
+                    end
+                end
+            end
+            local nc = tick()
+            jb("TPing to collector...")
+            Xb(CFrame.new(1645, 18.9, -1761))
+            Nb(19 - (tick() - nc))
+            Pb()
+            jb("Selling...")
+            Wb(CFrame.new(1647, 50.7, -1813))
+            Nb(
+                9,
+                function()
+                    return i.PlayerGui.RobberyMoneyGui.Enabled
+                end
+            )
+        end
+        ac()
+        if mc then
+            Ib = false
+            O.TextColor3 = Color3.new(1, 1, 1)
+            jb("Museum success!")
+        end
+    end
+    ib(false)
+    wait(2)
+    if mc then
+        jb("5 second cooldown.")
+        wait(5)
+    end
+end
+local function fc()
+    local mc = Zb("Steam engine")
+    if mc then
+        jb("Robbery started!")
+        local nc = workspace.Trains:GetDescendants()
+        for pc = 1, #nc do
+            local qc = nc[pc]
+            if qc.Name == "Briefcase" and qc.Parent and qc:FindFirstChild("Weld") then
+                if o or Rb() then
+                    break
+                end
+                if ob then
+                    for rc = 1, #ob do
+                        if ob[rc].Part == qc then
+                            ob[rc]:Callback(true)
+                            break
+                        end
+                    end
+                    Nb(2.5)
+                else
+                    qc.Weld.C0 = CFrame.new(0, 0, 5)
+                    qc.Weld.Part1 = m
+                    Nb()
+                    Vb(qc)
+                    Nb(
+                        3,
+                        function()
+                            return qc.Parent ~= nil
+                        end
+                    )
+                    j:SendKeyEvent(false, "E", false, game)
+                    Nb()
+                    qc:ClearAllChildren()
+                end
+            end
+        end
+        local oc = tick()
+        Nb(1)
+        jb("TPing to collector...")
+        Xb(CFrame.new(1645, 18.9, -1761))
+        Nb(7 - (tick() - oc))
+        Pb()
+        jb("Selling...")
+        Wb(CFrame.new(1647, 50.7, -1813))
+        Nb(
+            9,
+            function()
+                return i.PlayerGui.RobberyMoneyGui.Enabled
+            end
+        )
+        ac()
+        if mc then
+            vb = false
+            L.TextColor3 = Color3.new(1, 1, 1)
+            jb("Train success!")
+        end
+    end
+    ib(false)
+    wait(2)
+    if mc then
+        jb("5 second cooldown.")
+        wait(5)
+    end
+end
+local function gc()
+    local mc = Zb("Airdrop")
+    if mc then
+        local nc = zb[1]
+        if nc and nc.Parent then
+            jb("TPing to airdrop...")
+            Xb(CFrame.new(nc.Position + Vector3.new(-200, -5, 0)))
+            local oc = nc.Position + Vector3.new(-2, -5, 0)
+            local pc = CFrame.new(oc, Vector3.new(nc.Position.X, oc.Y, nc.Position.Z))
+            y()
+            Wb(pc)
+            jb("Robbery started!")
+            Nb(0.2)
+            if o then
+                mc = false
+            else
+                k =
+                    u:Connect(
+                    function()
+                        m.Velocity, m.RotVelocity = n, n
+                        m.CFrame = pc
+                    end
+                )
+                for qc = 1, 7 do
+                    if not ob then
+                        Vb(nc)
+                        Nb()
+                        j:SendKeyEvent(true, "E", false, game)
+                    end
+                    Nb(
+                        6.5,
+                        function(rc)
+                            return nc.Parent ~= nil
+                        end
+                    )
+                    if ob then
+                        for rc = 1, #ob do
+                            if ob[rc].Part == nc then
+                                ob[rc]:Callback(true)
+                                break
+                            end
+                        end
+                    else
+                        j:SendKeyEvent(false, "E", false, game)
+                    end
+                    Nb(1)
+                    jb(string.format("Robbery started! (%d/6)", qc))
+                    if not nc.Parent then
+                        break
+                    end
+                end
+                k:Disconnect()
+            end
+            z()
+            ac()
+        else
+            table.remove(zb, 1)
+        end
+        if mc then
+            jb("Airdrop success!")
+        end
+    end
+    ib(false)
+    wait(2)
+    if mc then
+        jb("5 second cooldown.")
+        wait(5)
+    end
+end
+local function hc()
+    local mc = Zb("Plane")
+    if mc then
+        local nc
+        if workspace:FindFirstChild("Plane") then
+            nc = workspace.Plane:FindFirstChild("Root")
+        end
+        if nc then
+            jb("Waiting for takeoff.")
+            Nb(
+                20,
+                function()
+                    return nc.Parent ~= nil and nc.Position.Y < 300
+                end
+            )
+            mc = not o
+            if workspace:FindFirstChild("Plane") then
+                jb("Robbery started!")
+                local oc = workspace.Plane.Crates:GetChildren()
+                for pc = 1, #oc do
+                    local qc = oc[pc]:FindFirstChild("1")
+                    if qc and qc.Parent and qc.Transparency < .99 and not o then
+                        local rc = qc.Parent["2"]
+                        local sc
+                        k =
+                            u:Connect(
+                            function()
+                                m.CFrame = rc.CFrame + Vector3.new(0, -9, 0)
+                                m.Velocity, m.RotVelocity = n, n
+                            end
+                        )
+                        if ob then
+                            Nb(0.5)
+                            for tc = 1, #ob do
+                                local uc = ob[tc]
+                                if ob[tc].Part == qc then
+                                    ob[tc]:Callback(true)
+                                    break
+                                end
+                            end
+                        else
+                            qc.Anchored = false
+                            sc = a("Weld", qc, {Part0 = qc, Part1 = m, C0 = CFrame.new(0, 4.5, 0)})
+                            Nb(0.5)
+                            Vb(qc)
+                            Nb(
+                                20,
+                                function()
+                                    return qc.Transparency < .99
+                                end
+                            )
+                            j:SendKeyEvent(false, "E", false, game)
+                            qc.CanCollide = true
+                        end
+                        Nb(0.5)
+                        k:Disconnect()
+                        if i.PlayerGui.RobberyMoneyGui.Enabled then
+                            if sc then
+                                sc:Destroy()
+                            end
+                            jb("Selling...")
+                            Xb(CFrame.new(-398, 30, 2026))
+                            Nb(
+                                3,
+                                function()
+                                    return i.PlayerGui.RobberyMoneyGui.Enabled
+                                end
+                            )
+                            break
+                        elseif sc then
+                            sc:Destroy()
+                        end
+                    end
+                end
+            end
+            ac()
+        end
+        if mc then
+            wb = false
+            P.TextColor3 = Color3.new(1, 1, 1)
+            jb("Plane success!")
+        end
+    end
+    ib(false)
+    wait(2)
+    if mc then
+        jb("5 second cooldown.")
+        wait(5)
+    end
+end
+local function ic()
+    local mc = Zb("Power plant")
+    if mc then
+        jb("TPing to power plant...")
+        Xb(CFrame.new(693.4, 38, 2358.8) * CFrame.Angles(0, math.pi / -2, 0))
+        Nb(
+            2,
+            function()
+                return not tb.IsOpen
+            end
+        )
+        if o then
+            mc = false
+        elseif tb.IsOpen then
+            jb("Solving first puzzle...")
+            for pc, qc in ipairs(tb.Grid) do
+                for rc, sc in ipairs(qc) do
+                    qc[rc] = sc + 1
+                end
+            end
+            local nc, oc =
+                pcall(
+                g,
+                {
+                    Url = "https://numberlink-solver.sagesapphire.repl.co",
+                    Method = "POST",
+                    Body = game:GetService("HttpService"):JSONEncode({Matrix = tb.Grid}),
+                    Headers = {["Content-Type"] = "application/json"}
+                }
+            )
+            if nc and type(oc) == "table" and oc.Success then
+                tb.Grid = game:GetService("HttpService"):JSONDecode(oc.Body).Solution
+                for pc, qc in ipairs(tb.Grid) do
+                    for rc, sc in ipairs(qc) do
+                        qc[rc] = sc - 1
+                    end
+                end
+                tb.OnConnection()
+                Nb(
+                    3,
+                    function()
+                        return tb.IsOpen
+                    end
+                )
+                if not tb.IsOpen then
+                    m.CFrame = m.CFrame + Vector3.new(0, 25, 0)
+                    Wb(CFrame.new(719, 62.4, 2221))
+                    for pc = 1, 3 do
+                        jb("Robbery started!")
+                        Wb(CFrame.new(789.9, 5.2, 2158.4))
+                        Nb(1)
+                        m.CFrame = CFrame.new(789, 5.6, 2144)
+                        Nb(
+                            3,
+                            function()
+                                return not tb.IsOpen
+                            end
+                        )
+                        if tb.IsOpen then
+                            jb("Solving second puzzle...")
+                            for sc, tc in ipairs(tb.Grid) do
+                                for uc, vc in ipairs(tc) do
+                                    tc[uc] = vc + 1
+                                end
+                            end
+                            local qc, rc =
+                                pcall(
+                                g,
+                                {
+                                    Url = "https://numberlink-solver.sagesapphire.repl.co",
+                                    Method = "POST",
+                                    Body = game:GetService("HttpService"):JSONEncode({Matrix = tb.Grid}),
+                                    Headers = {["Content-Type"] = "application/json"}
+                                }
+                            )
+                            if qc and type(rc) == "table" and rc.Success then
+                                tb.Grid = game:GetService("HttpService"):JSONDecode(rc.Body).Solution
+                                for sc, tc in ipairs(tb.Grid) do
+                                    for uc, vc in ipairs(tc) do
+                                        tc[uc] = vc - 1
+                                    end
+                                end
+                                tb.OnConnection()
+                                Nb(
+                                    3,
+                                    function()
+                                        return tb.IsOpen
+                                    end
+                                )
+                                if tb.IsOpen then
+                                    tb:Hide()
+                                else
+                                    jb("TPing to collector...")
+                                    local sc = tick()
+                                    Xb(CFrame.new(1645, 18.9, -1761))
+                                    Nb(24 + math.random() * 1 - (tick() - sc))
+                                    Pb()
+                                    jb("Selling...")
+                                    Wb(CFrame.new(1647, 50.7, -1813))
+                                    Nb(
+                                        9,
+                                        function()
+                                            return i.PlayerGui:FindFirstChild("PowerPlantRobberyGui")
+                                        end
+                                    )
+                                    break
+                                end
+                            else
+                                tb:Hide()
+                            end
+                        end
+                    end
+                end
+            else
+                jb("HTTP ERROR")
+                Nb(1)
+            end
+        end
+        ac()
+        if mc then
+            Jb = false
+            Q.TextColor3 = Color3.new(1, 1, 1)
+            jb("Power plant success!")
+        end
+    end
+    ib(false)
+    wait(2)
+    if mc then
+        jb("5 second cooldown.")
+        wait(5)
+    end
+end
+local function jc()
+    Ab = tick()
+    jb("Speeding up the plane...")
+    local mc = m.CFrame
+    if tostring(i.Team) ~= "Police" then
+        d(qb, 1, 1)
+        qb()
+        local pc = m
+        Nb(
+            2,
+            function()
+                return m == pc
+            end
+        )
+    end
+    for pc = 1, #ob do
+        if ob[pc].Name == "Call Cargo Plane" then
+            ob[pc]:Callback(true)
+            break
+        end
+    end
+    wait(0.4)
+    d(qb, 1, 2)
+    qb()
+    local nc = m
+    Nb(
+        2,
+        function()
+            return m == nc
+        end
+    )
+    local oc = i.PlayerGui.NotificationGui.ContainerNotification.Message.Text:match("Wait (%d+)")
+    if oc and i.PlayerGui.NotificationGui.Enabled then
+        Ab = tick() - 197 + tonumber(oc)
+    end
+    if workspace:FindFirstChild("Plane") then
+        game:GetService("StarterGui"):SetCore("SendNotification", {Title = "CargoPlane", Text = "Arriving shortly!"})
+    end
+    Xb(mc)
+end
+if b then
+    game:GetService("StarterGui"):SetCore(
+        "SendNotification",
+        {
+            Title = "Auto-Rob by kim111#2795",
+            Text = t and "OPTIONS CHANGED!" or "tp method is currently patched",
+            Duration = 15,
+            Button1 = "nigga"
+        }
+    )
+else
+    game:GetService("StarterGui"):SetCore(
+        "SendNotification",
+        {
+            Title = "Auto-Rob by kim111#2795",
+            Text = t and "OPTIONS CHANGED!" or "Consider buying a paid exploit for more features, like robbing power",
+            Duration = 15,
+            Button1 = "ty daddy"
+        }
+    )
+end
+local kc = 0
+local lc = 0
+while wait(0.5) and B.Parent do
+    if workspace.Trains:FindFirstChild("LocomotiveFront") then
+        local mc = workspace.Trains.LocomotiveFront.Model.Front.Position
+        if mc.X < -1300 and mc.Z < 350 then
+            xb = nil
+            L.TextColor3 = Color3.new(1, 1, 1)
+        end
+    end
+    if (fireclickdetector or click_detector) and workspace.Switches.BranchBack.Rail.Transparency < .9 then
+        (fireclickdetector or click_detector)(workspace.Switches.BranchBack.Lever.Click.ClickDetector, 1)
+    end
+    i.PlayerGui.RobberyMoneyGui.Enabled = false
+    if s.enabled then
+        local mc = #game:GetService("Teams").Police:GetPlayers()
+        local nc = #h:GetPlayers()
+        if Jb and g then
+            ic()
+        elseif wb then
+            hc()
+        elseif Ib then
+            ec()
+        elseif Hb then
+            bc()
+        elseif vb then
+            fc()
+        elseif xb then
+            dc()
+        elseif Gb then
+            cc()
+        elseif qb and s.respawnForPlane and tick() - Ab > 197 and mc < nc - mc and (mc > 1 or nc < 20) then
+            jc()
+        elseif Mb and tick() - lc > 120 and g then
+            lc = tick()
+            ic()
+        elseif #zb > 0 then
+            Ob("Caret")
+            gc()
+        else
+            jb("Wait for stores to open" .. string.rep(".", kc % 3 + 1))
+            kc = kc + 1
+        end
+    else
+        jb("Disabled.")
+    end
+end
